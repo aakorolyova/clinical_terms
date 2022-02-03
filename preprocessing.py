@@ -63,7 +63,7 @@ def augment_pairs_df(df, vocab, num_to_add):
     new_pairs = []
     vocab_alpha = [token for token in vocab if token.isalpha()]
     while count_new_pairs < num_to_add:
-        new_term_1 = random.choice(vocab_alpha)
+        new_term_1 = random.choice(df.Term1.tolist())
         new_term_2 = random.choice(list(set(vocab_alpha) - related_terms_dict[new_term_1]))
         new_pairs.append((new_term_1, new_term_2))
         count_new_pairs += 1
