@@ -132,3 +132,7 @@ dmypy.json
 /data/ClinNotes.csv
 /data/MedicalConcepts.csv
 /data/*.pdf
+
+# logging data
+/training_arguments
+/wandb
