@@ -5,7 +5,7 @@ from transformers import BertTokenizer
 from transformers import Trainer, TrainingArguments
 from transformers import BertConfig, BertForMaskedLM
 from transformers import DataCollatorForLanguageModeling
-from custom_dataset import CustomDataset
+from custom_datasets import CustomDataset
 
 def train_mlm(wandb_key: str,
               model_name: str,
@@ -14,6 +14,7 @@ def train_mlm(wandb_key: str,
               training_data_path: str,
               output_model_name: str,
               training_arg_dir: str,
+              batch_size: int,
               do_lower_case: bool = True):
 
     # wandb is used for logging - login with your authentication key
@@ -34,7 +35,7 @@ def train_mlm(wandb_key: str,
         output_dir= training_arg_dir,
         overwrite_output_dir=True,
         num_train_epochs=num_epochs,
-        per_device_train_batch_size=16,
+        per_device_train_batch_size=batch_size,
         save_steps=2000,
         save_total_limit=2,
         prediction_loss_only=True
@@ -43,7 +44,7 @@ def train_mlm(wandb_key: str,
     train_dataset = pd.read_csv(training_data_path)
     train_dataset['text'] = train_dataset.sentence
 
-    MAX_LEN = 128
+    MAX_LEN = 50
     training_set = CustomDataset(train_dataset, bert_tokenizer, MAX_LEN)
 
     trainer = Trainer(
@@ -65,4 +66,5 @@ if __name__=='__main__':
               training_data_path=r'data/ClinNotes_sentences.csv',
               output_model_name=r"models/bert_mlm_sentences",
               training_arg_dir='training_arguments',
+              batch_size=32,
               do_lower_case=True)
